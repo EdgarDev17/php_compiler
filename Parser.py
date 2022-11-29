@@ -9,13 +9,12 @@ import Lexer
 # Importamos los tokens del lexer
 # noinspection PySingleQuotedDocstring,PyMethodMayBeStatic
 
-
 class UsoParser:
     # Propiedades
     VERBOSE = 1
     tokens = Lexer.UsoLexer.tokens
-    result = None
-    error = None
+    result = ''
+    error = ''
 
     def __init__(self, file_path):
         self.parser = None
@@ -33,6 +32,18 @@ class UsoParser:
     def p_expression_plus(self, p):
         """expression : expression PLUS term"""
         p[0] = p[1] + p[3]
+
+    def p_expression_minus(self, p):
+        'expression : expression MINUS term'
+        p[0] = p[1] - p[3]
+
+    def p_term_times(self, p):
+        'term : term TIMES factor'
+        p[0] = p[1] * p[3]
+
+    def p_term_div(self, p):
+        'term : term DIVIDE factor'
+        p[0] = p[1] / p[3]
 
     def p_declaration_list_1(self, p):
         'declaration_list : declaration_list declaration'
@@ -193,8 +204,7 @@ class UsoParser:
         pass
 
     def p_iteration_stmt(self, p):
-        '''iteration_stmt :
-         FOR LPAREN var_declaration SEMICOLON expression SEMICOLON additive_expression RPAREN statement
+        '''iteration_stmt :  FOR LPAREN var_declaration SEMICOLON expression SEMICOLON additive_expression RPAREN statement
             | WHILE LPAREN expression RPAREN statement
         '''
         pass
